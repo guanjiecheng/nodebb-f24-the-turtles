@@ -295,9 +295,9 @@ module.exports = function (utils, Benchpress, relative_path) {
 		 * isAnonymous: true or false, if true displays anonymous avatar, else uses userObj for avatar
 		 */
 
-		let isAnonymous = false
-		if (anonymous == "true"){
-			isAnonymous = true
+		let isAnonymous = false;
+		if (anonymous === 'true') {
+			isAnonymous = true;
 		}
 		// Placeholder values for anonymous users
 		const anonymousUserObj = {
@@ -335,7 +335,7 @@ module.exports = function (utils, Benchpress, relative_path) {
 
 		// If the user is not anonymous and has a picture, render the picture
 		if (!isAnonymous && userObj.picture) {
-			output += `<img${attr2String(attributes)} alt="${userObj.username}" loading="lazy" component="${component || 'avatar/picture'}" src="${userObj.picture}" style="${styles.join(' ')}" onError="this.remove()" itemprop="image" />`;
+			output += `<img${attr2String(attributes)} alt="${userObj.username}" loading='lazy' component="${component || 'avatar/picture'}" src="${userObj.picture}" style="${styles.join(' ')}" onError="this.remove()" itemprop="image" />`;
 		}
 
 		// Always render the icon for both anonymous and regular users
@@ -344,8 +344,8 @@ module.exports = function (utils, Benchpress, relative_path) {
 		return output;
 	}
 
-	function checkAnonymous(anonymous){
-		return anonymous == "true";
+	function checkAnonymous(anonymous) {
+		return anonymous === 'true';
 	}
 
 	function increment(value, inc) {
