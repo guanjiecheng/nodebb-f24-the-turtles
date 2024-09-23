@@ -27,7 +27,7 @@ define('topicList', [
 
 	TopicList.init = function (template, cb) {
 		topicListEl = findTopicListElement();
-		
+
 		templateName = template;
 		loadTopicsCallback = cb || loadTopicsAfter;
 

@@ -49,7 +49,7 @@ define('forum/category', [
 				ajaxify.go('/category/' + category.cid);
 			},
 		});
-		
+
 		hooks.fire('action:topics.loaded', { topics: ajaxify.data.topics });
 		hooks.fire('action:category.loaded', { cid: ajaxify.data.cid });
 	};
