@@ -139,9 +139,11 @@ module.exports = function (Topics) {
 		postData.tid = tid;
 		postData.ip = data.req ? data.req.ip : null;
 		postData.isMain = true;
+		postData.isannonymous = data.postAnnonymous;
+
 		postData = await posts.create(postData);
 		postData = await onNewPost(postData, data);
-
+		
 		const [settings, topics] = await Promise.all([
 			user.getSettings(uid),
 			Topics.getTopicsByTids([postData.tid], uid),
@@ -164,7 +166,7 @@ module.exports = function (Topics) {
 
 		analytics.increment(['topics', `topics:byCid:${topicData.cid}`]);
 		plugins.hooks.fire('action:topic.post', { topic: topicData, post: postData, data: data });
-
+		
 		return {
 			topicData: topicData,
 			postData: postData,
@@ -239,7 +241,7 @@ module.exports = function (Topics) {
 			topicInfo,
 		] = await Promise.all([
 			posts.getUserInfoForPosts([postData.uid], uid),
-			Topics.getTopicFields(tid, ['tid', 'uid', 'title', 'slug', 'cid', 'postcount', 'mainPid', 'scheduled', 'tags']),
+			Topics.getTopicFields(tid, ['tid', 'uid', 'title', 'slug', 'cid', 'postcount', 'mainPid', 'scheduled', 'tags', 'isannonymous']),
 			Topics.addParentPosts([postData]),
 			Topics.syncBacklinks(postData),
 			posts.parsePost(postData),

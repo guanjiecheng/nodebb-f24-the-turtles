@@ -24,6 +24,7 @@ module.exports = function (utils, Benchpress, relative_path) {
 		renderDigestAvatar,
 		userAgentIcons,
 		buildAvatar,
+		buildAnonymousAvatar,
 		increment,
 		generateWroteReplied,
 		generateRepliedTo,
@@ -315,6 +316,40 @@ module.exports = function (utils, Benchpress, relative_path) {
 			output += `<img${attr2String(attributes)} alt="${userObj.username}" loading="lazy" component="${component || 'avatar/picture'}" src="${userObj.picture}" style="${styles.join(' ')}" onError="this.remove()" itemprop="image" />`;
 		}
 		output += `<span${attr2String(attributes)} component="${component || 'avatar/icon'}" style="${styles.join(' ')} background-color: ${userObj['icon:bgColor']}">${userObj['icon:text']}</span>`;
+		return output;
+	}
+
+	function buildAnonymousAvatar(size, rounded, classNames, component) {
+		/**
+		 * size: a picture size in the form of a value with units (e.g. 64px, 4rem, etc.)
+		 * rounded: true or false (optional, default false)
+		 * classNames: additional class names to prepend (optional, default none)
+		 * component: overrides the default component (optional, default none)
+		 */
+		
+		// Placeholder values for anonymous users
+		const anonymousUserObj = {
+			username: 'Anonymous',
+			'icon:bgColor': '#ccc', // default background color for the icon
+			'icon:text': '?', // default text inside the icon
+		};
+	
+		classNames = classNames || '';
+		const attributes = new Map([
+			['title', anonymousUserObj.username],
+			['class', `avatar ${classNames}${rounded ? ' avatar-rounded' : ''}`],
+		]);
+		const styles = [`--avatar-size: ${size};`];
+		const attr2String = attributes => Array.from(attributes).reduce((output, [prop, value]) => {
+			output += ` ${prop}="${value}"`;
+			return output;
+		}, '');
+	
+		let output = '';
+	
+		// Since anonymous users won't have a picture, we skip the img tag
+	
+		output += `<span${attr2String(attributes)} component="${component || 'avatar/icon'}" style="${styles.join(' ')} background-color: ${anonymousUserObj['icon:bgColor']}">${anonymousUserObj['icon:text']}</span>`;
 		return output;
 	}
 
