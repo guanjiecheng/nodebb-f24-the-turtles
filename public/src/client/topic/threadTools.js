@@ -62,7 +62,7 @@ define('forum/topic/threadTools', [
 		});
 
 		topicContainer.on('click', '[component="topic/mark-unread"]', function () {
-			console.log("mark-unreadAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+			console.log('mark-unreadAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 			topicCommand('del', '/read', undefined, () => {
 				if (app.previousUrl && !app.previousUrl.match('^/topic')) {
 					ajaxify.go(app.previousUrl, function () {
@@ -130,21 +130,6 @@ define('forum/topic/threadTools', [
 				tag.init([ajaxify.data], ajaxify.data.tagWhitelist);
 			});
 		});
-
-		// topicContainer.on('click', '[component="topic/resolve"]', function () {
-		// 	console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		// 	require(['forum/topic/resolve'], function (resolve) {
-		// 		resolve.init();
-		// 	});
-		// });
-
-		// topicContainer.on('click', '[component="topic/resolve"]', function () {
-        //     topicCommand('put', '/resolve', 'resolve', function() {
-        //         alerts.success('[[topic:thread-tools.resolve-success]]');
-        //         ajaxify.refresh();
-        //     });
-        //     return false;
-        // });
 
 		topicContainer.on('click', '[component="topic/move-posts"]', function () {
 			require(['forum/topic/move-post'], function (movePosts) {
