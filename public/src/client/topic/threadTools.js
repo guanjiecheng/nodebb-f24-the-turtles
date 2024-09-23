@@ -138,13 +138,13 @@ define('forum/topic/threadTools', [
 		// 	});
 		// });
 
-		topicContainer.on('click', '[component="topic/resolve"]', function () {
-            topicCommand('put', '/resolve', 'resolve', function() {
-                alerts.success('[[topic:thread-tools.resolve-success]]');
-                ajaxify.refresh();
-            });
-            return false;
-        });
+		// topicContainer.on('click', '[component="topic/resolve"]', function () {
+        //     topicCommand('put', '/resolve', 'resolve', function() {
+        //         alerts.success('[[topic:thread-tools.resolve-success]]');
+        //         ajaxify.refresh();
+        //     });
+        //     return false;
+        // });
 
 		topicContainer.on('click', '[component="topic/move-posts"]', function () {
 			require(['forum/topic/move-post'], function (movePosts) {
