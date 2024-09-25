@@ -86,6 +86,7 @@
 	"composer.discard": "Are you sure you wish to discard this post?",
 	"composer.submit-and-lock": "Submit and Lock",
 	"composer.toggle-dropdown": "Toggle Dropdown",
+	"composer.topic-privacy": "Toggle Private/Public Posting",
 	"composer.uploading": "Uploading %1",
 	"composer.formatting.bold": "Bold",
 	"composer.formatting.italic": "Italic",
