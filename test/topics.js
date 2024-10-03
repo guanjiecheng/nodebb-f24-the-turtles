@@ -76,7 +76,7 @@ describe('Topic\'s', () => {
 				done();
 			});
 		});
-		
+
 		it('should set isAnonymous by default to false when creating a new topic', (done) => {
 			topics.post({
 				uid: topic.userId,
