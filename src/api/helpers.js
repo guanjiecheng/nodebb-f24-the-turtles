@@ -49,6 +49,7 @@ exports.buildReqObject = (req, payload) => {
 };
 
 exports.doTopicAction = async function (action, event, caller, { tids }) {
+	console.log('A8doTopicAction');
 	if (!Array.isArray(tids)) {
 		throw new Error('[[error:invalid-tid]]');
 	}

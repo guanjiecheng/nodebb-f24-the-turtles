@@ -1,0 +1,21 @@
+paths:
+  /topics/{tid}/resolve:
+    put:
+      summary: Resolve a topic
+      description: Marks a topic as resolved.
+      parameters:
+        - name: tid
+          in: path
+          required: true
+          description: Topic ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Topic marked as resolved successfully
+        '400':
+          description: Invalid request
+        '403':
+          description: Not authorized
+        '404':
+          description: Topic not found

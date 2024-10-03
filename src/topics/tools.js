@@ -110,7 +110,12 @@ module.exports = function (Topics) {
 		return topicData;
 	}
 
+	topicTools.resolve = async function (tid, uid) {
+		return await toggleResolve(tid, uid, true, true);
+	};
+
 	topicTools.pin = async function (tid, uid) {
+		console.log('A9topics.pin');
 		return await togglePin(tid, uid, true);
 	};
 
@@ -119,6 +124,7 @@ module.exports = function (Topics) {
 	};
 
 	topicTools.setPinExpiry = async (tid, expiry, uid) => {
+		console.log('A10topics.pin');
 		if (isNaN(parseInt(expiry, 10)) || expiry <= Date.now()) {
 			throw new Error('[[error:invalid-data]]');
 		}
@@ -148,6 +154,48 @@ module.exports = function (Topics) {
 
 		return tids.filter(Boolean);
 	};
+
+	async function toggleResolve(tid, uid, resolve, pin) {
+		console.log('9 topics.resolve');
+		const topicData = await Topics.getTopicData(tid);
+		if (!topicData) {
+			throw new Error('[[error:no-topic]]');
+		}
+
+		Topics.setTopicField(tid, 'resolved', resolve ? 1 : 0);
+		const promises = [
+			Topics.setTopicField(tid, 'pinned', pin ? 1 : 0),
+			Topics.setTopicField(tid, 'resolved', resolve ? 1 : 0),
+			// Topics.events.log(tid, { type: pin ? 'pin' : 'unpin', uid }),
+			// Topics.events.log(tid, { type: resolve ? 'resolve' : 'unresolve', uid }),
+		];
+		if (resolve) {
+			// promises.push(db.sortedSetAdd(`cid:${topicData.cid}:tids:pinned`, Date.now(), tid));
+			promises.push(db.sortedSetAdd(`cid:${topicData.cid}:tids:resolved`, Date.now(), tid));
+			promises.push(db.sortedSetsRemove([
+				`cid:${topicData.cid}:tids`,
+				`cid:${topicData.cid}:tids:create`,
+				`cid:${topicData.cid}:tids:posts`,
+				`cid:${topicData.cid}:tids:votes`,
+				`cid:${topicData.cid}:tids:views`,
+			], tid));
+		}
+
+		const results = await Promise.all(promises);
+
+		topicData.isPinned = pin; // deprecate in v2.0
+		topicData.isResolved = resolve;
+		topicData.pinned = pin;
+		topicData.resolved = resolve;
+		topicData.events = results[1];
+
+		// plugins.hooks.fire('action:topic.pin', { topic: _.clone(topicData), uid });
+
+		const updatedTopicData = await Topics.getTopicData(tid);
+		console.log('Updated topic data:', updatedTopicData);
+
+		return topicData;
+	}
 
 	async function togglePin(tid, uid, pin) {
 		const topicData = await Topics.getTopicData(tid);

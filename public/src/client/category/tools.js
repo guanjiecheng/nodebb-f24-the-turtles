@@ -47,6 +47,7 @@ define('forum/category/tools', [
 		});
 
 		components.get('topic/pin').on('click', function () {
+			console.log('A3pin');
 			categoryCommand('put', '/pin', 'pin', onCommandComplete);
 			return false;
 		});
@@ -57,6 +58,7 @@ define('forum/category/tools', [
 		});
 
 		components.get('topic/resolve').on('click', function () {
+			console.log('3mark-resolve');
 			categoryCommand('put', '/resolve', 'resolve', onCommandComplete);
 			return false;
 		});
@@ -141,6 +143,8 @@ define('forum/category/tools', [
 		socket.on('event:topic_unlocked', setLockedState);
 		socket.on('event:topic_pinned', setPinnedState);
 		socket.on('event:topic_unpinned', setPinnedState);
+		socket.on('event:topic_resolved', setResolvedState);
+		socket.on('event:topic_unresolved', setResolvedState);
 		socket.on('event:topic_moved', onTopicMoved);
 	};
 
@@ -173,8 +177,9 @@ define('forum/category/tools', [
 				threadTools.requestPinExpiry(body, execute.bind(null, true));
 				break;
 
-			case 'resolve': // Add a confirmation for resolving
-				bootbox.confirm('[[topic:thread-tools.resolve-confirm]]', execute);
+			case 'resolve':
+				console.log('2resolve');
+				threadTools.requestResolveExpiry(body, execute.bind(null, true));
 				break;
 
 			default:
@@ -191,6 +196,8 @@ define('forum/category/tools', [
 		socket.removeListener('event:topic_unlocked', setLockedState);
 		socket.removeListener('event:topic_pinned', setPinnedState);
 		socket.removeListener('event:topic_unpinned', setPinnedState);
+		socket.removeListener('event:topic_resolved', setResolvedState);
+		socket.removeListener('event:topic_unresolved', setResolvedState);
 		socket.removeListener('event:topic_moved', onTopicMoved);
 	};
 
@@ -232,6 +239,9 @@ define('forum/category/tools', [
 
 		components.get('topic/pin').toggleClass('hidden', areAllScheduled || isAnyPinned);
 		components.get('topic/unpin').toggleClass('hidden', areAllScheduled || !isAnyPinned);
+
+		components.get('topic/mark-resolve').toggleClass('hidden', areAllScheduled || isAnyPinned);
+		// components.get('topic/mark-unread-for-all').toggleClass('hidden', areAllScheduled || !isAnyPinned);
 
 		components.get('topic/merge').toggleClass('hidden', isAnyScheduled);
 	}
@@ -281,9 +291,21 @@ define('forum/category/tools', [
 	}
 
 	function setPinnedState(data) {
+		console.log('A4setPinnedState');
 		const topic = getTopicEl(data.tid);
 		topic.toggleClass('pinned', data.isPinned);
 		topic.find('[component="topic/pinned"]').toggleClass('hidden', !data.isPinned);
+		// topic.toggleClass('pinned', data.isPinned);
+		// topic.find('[component="topic/resolved"]').toggleClass('hidden', !data.isPinned);
+		ajaxify.refresh();
+	}
+
+	function setResolvedState(data) {
+		console.log('A4setPinnedState');
+		const topic = getTopicEl(data.tid);
+		// topic.toggleClass('pinned', data.isPinned);
+		topic.toggleClass('resolved', data.isResolved);
+		topic.find('[component="topic/resolved"]').toggleClass('hidden', !data.isResolved);
 		ajaxify.refresh();
 	}
 

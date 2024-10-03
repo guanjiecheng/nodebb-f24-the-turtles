@@ -64,6 +64,7 @@ Topics.purge = async (req, res) => {
 };
 
 Topics.pin = async (req, res) => {
+	console.log('A5topics.pin');
 	const { expiry } = req.body;
 	await api.topics.pin(req, { tids: [req.params.tid], expiry });
 
@@ -72,6 +73,12 @@ Topics.pin = async (req, res) => {
 
 Topics.unpin = async (req, res) => {
 	await api.topics.unpin(req, { tids: [req.params.tid] });
+	helpers.formatApiResponse(200, res);
+};
+
+Topics.resolve = async (req, res) => {
+	console.log('5topics.resolve');
+	await api.topics.resolve(req, { tids: [req.params.tid] });
 	helpers.formatApiResponse(200, res);
 };
 
