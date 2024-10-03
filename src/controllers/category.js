@@ -100,7 +100,7 @@ categoryController.get = async function (req, res, next) {
 		return next();
 	}
 
-	categories.modifyTopicsByPrivilege(categoryData.topics, userPrivileges);
+	await categories.modifyTopicsByPrivilege(categoryData.topics, userPrivileges);
 	categoryData.tagWhitelist = categories.filterTagWhitelist(categoryData.tagWhitelist, userPrivileges.isAdminOrMod);
 
 	const allCategories = [];

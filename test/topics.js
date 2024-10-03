@@ -236,6 +236,42 @@ describe('Topic\'s', () => {
 			assert.strictEqual(replyResult.body.response.user.displayname, 'guest124');
 			meta.config.allowGuestHandles = oldValue;
 		});
+
+		it('default post as public', (done) => {
+			topics.post({ uid: topic.userId, title: topic.title, content: topic.content, cid: topic.categoryId}, (err,result) => {
+				assert.strictEqual(result.topicData.isPrivate, 'false', 'isPrivate should be false by default')
+				done();
+			});
+		});
+
+		it('be able to post as private', (done) => {
+			topics.post({ uid: topic.userId, title: topic.title, content: topic.content, cid: topic.categoryId, isPrivate: true}, (err,result) => {
+				assert.strictEqual(result.topicData.isPrivate, 'true', 'isPrivate should be true')
+				done();
+			});
+		});
+
+		it('Guest users should not be able to see private posts', (done) => {
+			topics.post({ uid: topic.userId, title: topic.title, content: topic.content, cid: topic.categoryId, isPrivate: true}, (err,result) => {
+				assert.strictEqual(result.topicData.isPrivate, 'true', 'isPrivate should be true')
+				Categories.getCategoryTopics({
+					cid: topic.categoryId,
+					start: 0,
+					stop: 10,
+					uid: 0,
+					sort: 'oldest_to_newest',
+				}, (err, res) => {
+					assert.equal(err, null);
+					assert(Array.isArray(res.topics));
+					
+					let tids = res.topics.map((x) => {x.tid})
+					let allowed = privileges.topics.filterTids('topics:read',tids, fooUid)
+					assert(allowed.includes(result.topicData.tid), false, 'should not be able to read this topic')
+
+					done();
+				});
+			});
+		});
 	});
 
 	describe('.reply', () => {

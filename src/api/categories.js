@@ -147,7 +147,7 @@ categoriesAPI.getTopics = async (caller, data) => {
 		tag: data.query.tag,
 		targetUid,
 	});
-	categories.modifyTopicsByPrivilege(result.topics, userPrivileges);
+	await categories.modifyTopicsByPrivilege(result.topics, userPrivileges);
 
 	return { ...result, privileges: userPrivileges };
 };

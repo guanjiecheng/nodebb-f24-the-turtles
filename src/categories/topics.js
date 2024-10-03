@@ -16,14 +16,16 @@ module.exports = function (Categories) {
 		const tids = await Categories.getTopicIds(results);
 		let topicsData = await topics.getTopicsByTids(tids, data.uid);
 		topicsData = await user.blocks.filter(data.uid, topicsData);
-
+		
 		if (!topicsData.length) {
 			return { topics: [], uid: data.uid };
 		}
 		topics.calculateTopicIndices(topicsData, data.start);
 
 		results = await plugins.hooks.fire('filter:category.topics.get', { cid: data.cid, topics: topicsData, uid: data.uid });
-		return { topics: results.topics, nextStart: data.stop + 1 };
+		const allowedToView = await privileges.topics.filterTids('topics:read',tids, data.uid)
+		const allowedTopics = results.topics.filter((x) => allowedToView.includes(x.tid))
+		return { topics: allowedTopics, nextStart: data.stop + 1 };
 	};
 
 	Categories.getTopicIds = async function (data) {
@@ -152,8 +154,8 @@ module.exports = function (Categories) {
 		return await topics.tools.checkPinExpiry(pinnedTids);
 	};
 
-	Categories.modifyTopicsByPrivilege = function (topics, privileges) {
-		if (!Array.isArray(topics) || !topics.length || privileges.view_deleted) {
+	Categories.modifyTopicsByPrivilege = async function (topics, p) {
+		if (!Array.isArray(topics) || !topics.length || p.view_deleted) {
 			return;
 		}
 

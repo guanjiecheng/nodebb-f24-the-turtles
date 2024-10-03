@@ -34,6 +34,7 @@ module.exports = function (Topics) {
 			postcount: 0,
 			viewcount: 0,
 			isAnonymous: data.postAnonymous ? data.postAnonymous : false,
+			isPrivate: data.privatePost
 		};
 
 		if (Array.isArray(data.tags) && data.tags.length) {
@@ -140,6 +141,7 @@ module.exports = function (Topics) {
 		postData.ip = data.req ? data.req.ip : null;
 		postData.isMain = true;
 		postData.isAnonymous = data.postAnonymous ? data.postAnonymous : false;
+		postData.isPrivate = data.privatePost
 		postData = await posts.create(postData);
 		postData = await onNewPost(postData, data);
 
