@@ -146,7 +146,7 @@ module.exports = function (User) {
 		return await db.getSortedSetRevRange(`uid:${uid}:posts`, start, stop);
 	};
 
-		// Add the pin and unpin methods
+	// Add the pin and unpin methods
 	User.pinPost = async function (pid, uid) {
 		const isAdminOrMod = await privileges.categories.isAdminOrMod('cid', uid); // replace 'cid' with appropriate category ID
 		if (!isAdminOrMod) {

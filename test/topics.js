@@ -687,7 +687,7 @@ describe('Topic\'s', () => {
 			const isLocked = await topics.isLocked(newTopic.tid);
 			assert(!isLocked);
 		});
-//pin and unpin feature
+		// pin and unpin feature
 		it('should pin topic', async () => {
 			await apiTopics.pin({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
 			const pinned = await topics.getTopicField(newTopic.tid, 'pinned');
