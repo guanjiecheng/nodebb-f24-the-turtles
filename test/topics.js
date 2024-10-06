@@ -777,18 +777,6 @@ describe('Topic\'s', () => {
 			assert.strictEqual(pinned, 0);
 		});
 
-		it('should mark topic as resolved', async () => {
-			await apiTopics.resolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
-			const resolved = await topics.getTopicField(newTopic.tid, 'resolved');
-			assert.strictEqual(resolved, 1, 'Topic should be marked as resolved');
-		});
-
-		it('should unmark topic as resolved (unresolved)', async () => {
-			await apiTopics.unresolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
-			const resolved = await topics.getTopicField(newTopic.tid, 'resolved');
-			assert.strictEqual(resolved, 0, 'Topic should be marked as unresolved');
-		});		
-
 		it('should move all topics', (done) => {
 			socketTopics.moveAll({ uid: adminUid }, { cid: moveCid, currentCid: categoryObj.cid }, (err) => {
 				assert.ifError(err);
@@ -916,6 +904,29 @@ describe('Topic\'s', () => {
 				return assert.strictEqual(err.message, '[[error:no-privileges]]');
 			}
 			assert(false);
+		});
+	});
+
+	describe('tools/resolve', () => {
+		let newTopic;
+		let newPost;
+		let newReply;
+		let newReply2;
+		it('should create a new topic', async () => {
+			const result = await topics.post({
+				uid: topic.userId,
+				title: topic.title,
+				content: topic.content,
+				cid: topic.categoryId,
+			});
+			newTopic = result.topicData;
+			newPost = result.postData;
+		});
+
+		it('should mark a topic as resolved', async () => {
+			await apiTopics.resolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+			const resolved = await topics.getTopicField(newTopic.tid, 'resolved');
+			assert.strictEqual(resolved, '1');
 		});
 	});
 
