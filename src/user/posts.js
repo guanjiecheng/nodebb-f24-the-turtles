@@ -162,5 +162,4 @@ module.exports = function (User) {
 		}
 		await db.setObjectField(`post:${pid}`, 'pinned', false);
 	};
-
 };
