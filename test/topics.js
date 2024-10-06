@@ -238,6 +238,82 @@ describe('Topic\'s', () => {
 		});
 	});
 
+	describe('Topics', () => {
+		// Test for creating a new topic
+		describe('.post', () => {
+			it('should create a new topic with valid parameters', (done) => {
+				topics.post({
+					uid: topic.userId,
+					title: 'Test Topic',
+					content: 'This is a test topic content',
+					cid: topic.categoryId,
+				}, (err, result) => {
+					assert.equal(err, null, 'topic created with error');
+					assert.ok(result);
+					assert.ok(result.topicData);
+					assert.ok(result.postData);
+					assert.equal(result.topicData.title, 'Test Topic', 'title should match');
+					done();
+				});
+			});
+
+			it('should return an error for invalid category', (done) => {
+				topics.post({
+					uid: topic.userId,
+					title: 'Test Topic',
+					content: 'This is a test topic content',
+					cid: 'invalid-category-id', // Invalid category ID
+				}, (err, result) => {
+					assert.ok(err, 'expected an error for invalid category');
+					done();
+				});
+			});
+		});
+
+		// Now follow with the reply tests
+		describe('.reply', () => {
+			let newTopic;
+			let newPost;
+
+			before((done) => {
+				topics.post({
+					uid: topic.userId,
+					title: topic.title,
+					content: topic.content,
+					cid: topic.categoryId,
+				}, (err, result) => {
+					if (err) {
+						return done(err);
+					}
+
+					newTopic = result.topicData;
+					newPost = result.postData;
+					done();
+				});
+			});
+
+			it('should create a new reply with proper parameters', (done) => {
+				topics.reply({ uid: topic.userId, content: 'test post', tid: newTopic.tid }, (err, result) => {
+					assert.equal(err, null, 'was created with error');
+					assert.ok(result);
+
+					done();
+				});
+			});
+
+			it('should handle direct replies', async () => {
+				const result = await topics.reply({ uid: topic.userId, content: 'test reply', tid: newTopic.tid, toPid: newPost.pid });
+				assert.ok(result);
+
+				const postData = await apiPosts.getReplies({ uid: 0 }, { pid: newPost.pid });
+				assert.ok(postData);
+
+				assert.equal(postData.length, 1, 'should have 1 result');
+				assert.equal(postData[0].pid, result.pid, 'result should be the reply we added');
+			});
+		});
+	});
+
 	describe('.reply', () => {
 		let newTopic;
 		let newPost;
@@ -415,6 +491,7 @@ describe('Topic\'s', () => {
 				assert.strictEqual(topicData.deleted, 0);
 				assert.strictEqual(topicData.locked, 0);
 				assert.strictEqual(topicData.pinned, 0);
+				assert.strictEqual(topicData.resolved, 0);
 				done();
 			});
 		});
@@ -699,6 +776,18 @@ describe('Topic\'s', () => {
 			const pinned = await topics.getTopicField(newTopic.tid, 'pinned');
 			assert.strictEqual(pinned, 0);
 		});
+
+		it('should mark topic as resolved', async () => {
+			await apiTopics.resolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+			const resolved = await topics.getTopicField(newTopic.tid, 'resolved');
+			assert.strictEqual(resolved, 1, 'Topic should be marked as resolved');
+		});
+
+		it('should unmark topic as resolved (unresolved)', async () => {
+			await apiTopics.unresolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+			const resolved = await topics.getTopicField(newTopic.tid, 'resolved');
+			assert.strictEqual(resolved, 0, 'Topic should be marked as unresolved');
+		});		
 
 		it('should move all topics', (done) => {
 			socketTopics.moveAll({ uid: adminUid }, { cid: moveCid, currentCid: categoryObj.cid }, (err) => {
