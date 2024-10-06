@@ -30,7 +30,7 @@ define('forum/topic/postTools', [
 
 		PostTools.updatePostCount(ajaxify.data.postcount);
 	};
-	
+
 	function renderMenu() {
 		const container = document.querySelector('[component="topic"]');
 		if (!container) {

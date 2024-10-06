@@ -238,23 +238,49 @@ describe('Topic\'s', () => {
 		});
 
 		it('default post as public', (done) => {
-			topics.post({ uid: topic.userId, title: topic.title, content: topic.content, cid: topic.categoryId}, (err,result) => {
-				assert.strictEqual(result.topicData.isPrivate, 'false', 'isPrivate should be false by default')
+			topics.post({
+				uid: topic.userId,
+				title: topic.title,
+				content: topic.content,
+				cid: topic.categoryId,
+			}, (err, result) => {
+				if (err) {
+					return done(err);
+				}
+				assert.strictEqual(result.topicData.isPrivate, 'false', 'isPrivate should be false by default');
 				done();
 			});
 		});
 
 		it('be able to post as private', (done) => {
-			topics.post({ uid: topic.userId, title: topic.title, content: topic.content, cid: topic.categoryId, isPrivate: true}, (err,result) => {
-				assert.strictEqual(result.topicData.isPrivate, 'true', 'isPrivate should be true')
+			topics.post({
+				uid: topic.userId,
+				title: topic.title,
+				content: topic.content,
+				cid: topic.categoryId,
+				isPrivate: true,
+			}, (err, result) => {
+				if (err) {
+					return done(err);
+				}
+				assert.strictEqual(result.topicData.isPrivate, 'true', 'isPrivate should be true');
 				done();
 			});
 		});
 
 		it('Guest users should not be able to see private posts', (done) => {
-			topics.post({ uid: topic.userId, title: topic.title, content: topic.content, cid: topic.categoryId, isPrivate: true}, (err,result) => {
-				assert.strictEqual(result.topicData.isPrivate, 'true', 'isPrivate should be true')
-				Categories.getCategoryTopics({
+			topics.post({
+				uid: topic.userId,
+				title: topic.title,
+				content: topic.content,
+				cid: topic.categoryId,
+				isPrivate: true,
+			}, (err, result) => {
+				if (err) {
+					return done(err);
+				}
+				assert.strictEqual(result.topicData.isPrivate, 'true', 'isPrivate should be true');
+				categories.getCategoryTopics({
 					cid: topic.categoryId,
 					start: 0,
 					stop: 10,
@@ -263,10 +289,10 @@ describe('Topic\'s', () => {
 				}, (err, res) => {
 					assert.equal(err, null);
 					assert(Array.isArray(res.topics));
-					
-					let tids = res.topics.map((x) => {x.tid})
-					let allowed = privileges.topics.filterTids('topics:read',tids, fooUid)
-					assert(allowed.includes(result.topicData.tid), false, 'should not be able to read this topic')
+
+					const tids = res.topics.map(x => x.tid);
+					const allowed = privileges.topics.filterTids('topics:read', tids, fooUid);
+					assert(allowed.includes(result.topicData.tid), false, 'should not be able to read this topic');
 
 					done();
 				});

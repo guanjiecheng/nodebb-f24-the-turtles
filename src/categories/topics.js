@@ -16,15 +16,15 @@ module.exports = function (Categories) {
 		const tids = await Categories.getTopicIds(results);
 		let topicsData = await topics.getTopicsByTids(tids, data.uid);
 		topicsData = await user.blocks.filter(data.uid, topicsData);
-		
+
 		if (!topicsData.length) {
 			return { topics: [], uid: data.uid };
 		}
 		topics.calculateTopicIndices(topicsData, data.start);
 
 		results = await plugins.hooks.fire('filter:category.topics.get', { cid: data.cid, topics: topicsData, uid: data.uid });
-		const allowedToView = await privileges.topics.filterTids('topics:read',tids, data.uid)
-		const allowedTopics = results.topics.filter((x) => allowedToView.includes(x.tid))
+		const allowedToView = await privileges.topics.filterTids('topics:read', tids, data.uid);
+		const allowedTopics = results.topics.filter(x => allowedToView.includes(x.tid));
 		return { topics: allowedTopics, nextStart: data.stop + 1 };
 	};
 
