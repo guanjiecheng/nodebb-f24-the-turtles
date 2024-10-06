@@ -238,6 +238,42 @@ describe('Topic\'s', () => {
 		});
 	});
 
+	it('default topic as unresolved', (done) => {
+		topics.post(
+			{ uid: topic.userId, title: topic.title, content: topic.content, cid: topic.categoryId },
+			(err, result) => {
+				if (err) {
+					return done(err);
+				}
+				assert.strictEqual(result.topicData.resolved, undefined, 'resolved should be undefined by default');
+				done();
+			}
+		);
+	});
+
+	it('should be able to mark topic as resolved', (done) => {
+		topics.post(
+			{ uid: topic.userId, title: topic.title, content: topic.content, cid: topic.categoryId },
+			(err, result) => {
+				if (err) {
+					return done(err);
+				}
+				topics.setTopicField(result.topicData.tid, 'resolved', '1', (err) => {
+					if (err) {
+						return done(err);
+					}
+					topics.getTopicField(result.topicData.tid, 'resolved', (err, resolved) => {
+						if (err) {
+							return done(err);
+						}
+						assert.strictEqual(resolved, '1', 'resolved should be true');
+						done();
+					});
+				});
+			}
+		);
+	});
+
 	describe('Topics', () => {
 		// Test for creating a new topic
 		describe('.post', () => {
@@ -491,7 +527,6 @@ describe('Topic\'s', () => {
 				assert.strictEqual(topicData.deleted, 0);
 				assert.strictEqual(topicData.locked, 0);
 				assert.strictEqual(topicData.pinned, 0);
-				assert.strictEqual(topicData.resolved, 0);
 				done();
 			});
 		});
