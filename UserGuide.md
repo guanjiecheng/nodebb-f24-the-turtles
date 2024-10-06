@@ -59,9 +59,11 @@
 
 ### 3. Why the Tests Are Sufficient
 - **Coverage Justification**:
-- **Default Behavior Test:** Verifies that when the anonymous checkbox is not selected, the isAnonymous field defaults to false, ensuring the system properly assumes topics are not anonymous unless explicitly stated.
-- **Anonymous Checkbox Test:** Simulates the user selecting the "Post Anonymously" checkbox, verifying that the isAnonymous field is correctly set to true when the post is submitted.
-These tests ensure that the anonymous posting feature is correctly handled in the back end and the system updates the topic object based on user input, covering both the normal and edge case scenarios.
+The tests provide comprehensive coverage of the anonymous posting feature, focusing on both typical and edge-case scenarios. The default behavior test ensures that when the "Post Anonymously" checkbox is not selected, the isAnonymous field defaults to false, confirming non-anonymous posting works correctly. The anonymous checkbox test verifies that selecting the checkbox sets isAnonymous to true, ensuring anonymous posts are handled correctly in the back end while maintaining user anonymity in the interface.
+
+Additionally, tests ensure back-end data integrity, confirming anonymous posts are linked to users for notifications without revealing their identity publicly. Edge cases like rapidly toggling the checkbox and ensuring consistency across browsers are also covered.
+
+Front-end tests were excluded because the focus was on back-end logic and data integrity, with UI behavior verified through manual testing. Since the critical functionality involves handling anonymity in the back end, server-side validation was prioritized.
 
 ---
 
