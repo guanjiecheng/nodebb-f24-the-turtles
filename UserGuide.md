@@ -85,14 +85,21 @@ The tests provide comprehensive coverage of the anonymous posting feature, focus
 ### Automated Tests
 
 ### 1. Location of Automated Tests
-- **Location**: Provide a link or description of where the automated tests can be found (e.g., repository path or test suite).
+- **Location**: File: test/topics.js, Lines: 241-276, 910-932
 
 ### 2. What is Being Tested
-- **Tested Features**: List the specific features or functionalities covered by the tests.
-- **Test Type**: Mention if these are unit tests, integration tests, etc.
+- **Tested Features**:
+   - Default topic as unresolved.
+   - Admin(instructor) should be able to mark topic as resolved.
+   - Verifies that the topic can be marked as resolved using apiTopics.resolve().
+- **Test Type**: Unit tests and backend tests
 
 ### 3. Why the Tests Are Sufficient
-- **Coverage Justification**: Explain why these tests are sufficient, covering important workflows, edge cases, and error handling.
+- **Coverage Justification**:
+I believe the tests are sufficient for covering the changes because they address the key behaviors related to the "resolved" field:
+- The first test checks that when a topic is initially created, the "resolved" field is undefined. This ensures that no unintended default values are assigned to the field during topic creation, which aligns with the expected functionality.
+- The second test verifies that the system correctly allows marking a topic as resolved by setting the "resolved" field to 1. It ensures that the update mechanism works as intended and that the field can be retrieved with the correct value after the change is made.
+- The tests in line 910-932 cover both the creation of a new topic and updating its "resolved" status. They validate the core functionality of marking topics as resolved and ensure the changes work end-to-end. The state is checked after the update, confirming correct behavior.
 
 # Author(s)
 - **Names**: Shanting Hou, Sofia Reyes Franco, Guanjie Cheng, Amanda Lu
