@@ -59,11 +59,7 @@
 
 ### 3. Why the Tests Are Sufficient
 - **Coverage Justification**:
-The tests provide comprehensive coverage of the anonymous posting feature, focusing on both typical and edge-case scenarios. The default behavior test ensures that when the "Post Anonymously" checkbox is not selected, the isAnonymous field defaults to false, confirming non-anonymous posting works correctly. The anonymous checkbox test verifies that selecting the checkbox sets isAnonymous to true, ensuring anonymous posts are handled correctly in the back end while maintaining user anonymity in the interface.
-
-Additionally, tests ensure back-end data integrity, confirming anonymous posts are linked to users for notifications without revealing their identity publicly. Edge cases like rapidly toggling the checkbox and ensuring consistency across browsers are also covered.
-
-Front-end tests were excluded because the focus was on back-end logic and data integrity, with UI behavior verified through manual testing. Since the critical functionality involves handling anonymity in the back end, server-side validation was prioritized.
+The tests provide comprehensive coverage of the anonymous posting feature, focusing on both typical and edge-case scenarios. The default behavior test ensures that when the "Post Anonymously" checkbox is not selected, the isAnonymous field defaults to false, confirming non-anonymous posting works correctly. The anonymous checkbox test verifies that selecting the checkbox sets isAnonymous to true, ensuring anonymous posts are handled correctly in the back end while maintaining user anonymity in the interface. Additionally, tests ensure back-end data integrity, confirming anonymous posts are linked to users for notifications without revealing their identity publicly. Edge cases like rapidly toggling the checkbox and ensuring consistency across browsers are also covered. Front-end tests were excluded because the focus was on back-end logic and data integrity, with UI behavior verified through manual testing. Since the critical functionality involves handling anonymity in the back end, server-side validation was prioritized.
 
 ---
 
