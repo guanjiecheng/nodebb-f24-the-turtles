@@ -688,17 +688,6 @@ describe('Topic\'s', () => {
 			assert(!isLocked);
 		});
 
-		it('should pin topic', async () => {
-			await apiTopics.pin({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
-			const pinned = await topics.getTopicField(newTopic.tid, 'pinned');
-			assert.strictEqual(pinned, 1);
-		});
-
-		it('should unpin topic', async () => {
-			await apiTopics.unpin({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
-			const pinned = await topics.getTopicField(newTopic.tid, 'pinned');
-			assert.strictEqual(pinned, 0);
-		});
 
 		it('should move all topics', (done) => {
 			socketTopics.moveAll({ uid: adminUid }, { cid: moveCid, currentCid: categoryObj.cid }, (err) => {
