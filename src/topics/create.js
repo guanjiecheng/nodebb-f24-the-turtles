@@ -34,14 +34,13 @@ module.exports = function (Topics) {
 			postcount: 0,
 			viewcount: 0,
 			isAnonymous: data.postAnonymous ? data.postAnonymous : false,
-			isPrivate: data.privatePost === undefined ? false : true,
-
 		};
 		
 		if (Array.isArray(data.tags) && data.tags.length) {
 			topicData.tags = data.tags.join(',');
 		}
-
+		
+		topicData.isPrivate = (data.privatePost === undefined || data.privatePost === false) ? false : true
 		const result = await plugins.hooks.fire('filter:topic.create', { topic: topicData, data: data });
 		topicData = result.topic;
 		await db.setObject(`topic:${topicData.tid}`, topicData);

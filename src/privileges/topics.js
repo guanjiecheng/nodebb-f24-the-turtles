@@ -90,7 +90,7 @@ privsTopics.filterTids = async function (privilege, tids, uid) {
 	tids = topicsData.filter((t) => {
 		const isAdminOrMod = results.isAdmin || results.isModerator;
 		const isOwner = t.uid === uid; // Check if the user is the topic owner
-		if (t.isPrivate) {
+		if (t.isPrivate === 'true') {
 			return isAdminOrMod || isOwner;
 		}
 
@@ -98,8 +98,6 @@ privsTopics.filterTids = async function (privilege, tids, uid) {
 			(results.isAdmin || privsTopics.canViewDeletedScheduled(t, {}, canViewDeleted[t.cid], canViewScheduled[t.cid]));
 	}).map(t => t.tid);
 
-
-	// return tids
 	const data = await plugins.hooks.fire('filter:privileges.topics.filter', {
 		privilege: privilege,
 		uid: uid,

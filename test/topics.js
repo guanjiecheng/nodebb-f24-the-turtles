@@ -1103,6 +1103,7 @@ describe('Topic\'s', () => {
 				content: 'topic content',
 				cid: topic.categoryId,
 				thumb: 'http://i.imgur.com/64iBdBD.jpg',
+				privatePost: true,
 			}, (err, result) => {
 				assert.ifError(err);
 				assert.ok(result);
@@ -1119,6 +1120,7 @@ describe('Topic\'s', () => {
 
 		it('should load topic api data', async () => {
 			const { response, body } = await request.get(`${nconf.get('url')}/api/topic/${topicData.slug}`);
+			console.log("RESPONSE", response, body, "\n")
 			assert.equal(response.statusCode, 200);
 			assert.strictEqual(body._header.tags.meta.find(t => t.name === 'description').content, 'topic content');
 			assert.strictEqual(body._header.tags.meta.find(t => t.property === 'og:description').content, 'topic content');

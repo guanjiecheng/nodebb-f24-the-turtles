@@ -87,7 +87,9 @@ module.exports = function (Categories) {
 		} else if (data.targetUid && set) {
 			return await db.sortedSetCard(set);
 		}
-		return data.category.topic_count;
+		const topics = await Categories.getAllTopicIds(data.category.cid, 0, data.category.topic_count)
+		const allowedToView = await privileges.topics.filterTids('topics:read', topics, data.uid);
+		return allowedToView.length;
 	};
 
 	Categories.buildTopicsSortedSet = async function (data) {
