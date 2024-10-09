@@ -105,7 +105,7 @@ I believe the tests are sufficient for covering the changes because they address
 
 ---
 
-## User Story 3:
+## User Story 3: As a student, I want to be able to privately post content to Instructors, so that sensitive or personal information will not be revealed to everyone
 
 ### 1. Feature Overview
 - **Feature Name**: Privacy Toggle for Topic Creation
