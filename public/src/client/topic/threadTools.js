@@ -52,7 +52,6 @@ define('forum/topic/threadTools', [
 		});
 
 		topicContainer.on('click', '[component="topic/pin"]', function () {
-			console.log('A2pinAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 			topicCommand('put', '/pin', 'pin');
 			return false;
 		});
@@ -63,7 +62,6 @@ define('forum/topic/threadTools', [
 		});
 
 		topicContainer.on('click', '[component="topic/mark-resolve"]', function () {
-			console.log('2mark-resolveAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 			topicCommand('put', '/resolve', 'resolve');
 			return false;
 		});
@@ -265,7 +263,6 @@ define('forum/topic/threadTools', [
 	}
 
 	ThreadTools.requestPinExpiry = function (body, onSuccess) {
-		console.log('A7requestPinExpiry');
 		app.parseAndTranslate('modals/set-pin-expiry', {}, function (html) {
 			const modal = bootbox.dialog({
 				title: '[[topic:thread-tools.pin]]',
@@ -305,8 +302,6 @@ define('forum/topic/threadTools', [
 	};
 
 	ThreadTools.requestResolveExpiry = function (body, onSuccess) {
-		console.log('77requestResolveExpiry');
-
 		// Modify to set expiry as 'forever' (no expiry)
 		app.parseAndTranslate('modals/set-pin-expiry', {}, function (html) {
 			const modal = bootbox.dialog({
@@ -402,7 +397,6 @@ define('forum/topic/threadTools', [
 
 
 	ThreadTools.setPinnedState = function (data) {
-		console.log('A1setPinnedStateAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 		const threadEl = components.get('topic');
 		if (parseInt(data.tid, 10) !== parseInt(threadEl.attr('data-tid'), 10)) {
 			return;
@@ -425,7 +419,6 @@ define('forum/topic/threadTools', [
 	};
 
 	ThreadTools.setResolvedState = function (data) {
-		console.log('1setResolvedStateAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 		const threadEl = components.get('topic');
 		if (parseInt(data.tid, 10) !== parseInt(threadEl.attr('data-tid'), 10)) {
 			return;

@@ -137,7 +137,6 @@ topicsAPI.purge = async function (caller, data) {
 };
 
 topicsAPI.pin = async function (caller, { tids, expiry }) {
-	console.log('A6topics.pin');
 	await doTopicAction('pin', 'event:topic_pinned', caller, { tids });
 
 	if (expiry) {
@@ -152,7 +151,6 @@ topicsAPI.unpin = async function (caller, data) {
 };
 
 topicsAPI.resolve = async function (caller, { tids, expiry }) {
-	console.log('6topics.pin');
 	await doTopicAction('resolve', 'event:topic_resolved', caller, { tids });
 
 	if (expiry) {

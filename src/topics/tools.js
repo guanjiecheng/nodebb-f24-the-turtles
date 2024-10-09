@@ -115,7 +115,6 @@ module.exports = function (Topics) {
 	};
 
 	topicTools.pin = async function (tid, uid) {
-		console.log('A9topics.pin');
 		return await togglePin(tid, uid, true);
 	};
 
@@ -124,7 +123,6 @@ module.exports = function (Topics) {
 	};
 
 	topicTools.setPinExpiry = async (tid, expiry, uid) => {
-		console.log('A10topics.pin');
 		if (isNaN(parseInt(expiry, 10)) || expiry <= Date.now()) {
 			throw new Error('[[error:invalid-data]]');
 		}
@@ -156,7 +154,6 @@ module.exports = function (Topics) {
 	};
 
 	async function toggleResolve(tid, uid, resolve, pin) {
-		console.log('9 topics.resolve');
 		const topicData = await Topics.getTopicData(tid);
 		if (!topicData) {
 			throw new Error('[[error:no-topic]]');
@@ -188,8 +185,6 @@ module.exports = function (Topics) {
 		topicData.pinned = pin;
 		topicData.resolved = resolve;
 		topicData.events = results[1];
-
-		// plugins.hooks.fire('action:topic.pin', { topic: _.clone(topicData), uid });
 
 		const updatedTopicData = await Topics.getTopicData(tid);
 		console.log('Updated topic data:', updatedTopicData);

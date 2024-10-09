@@ -47,7 +47,6 @@ define('forum/category/tools', [
 		});
 
 		components.get('topic/pin').on('click', function () {
-			console.log('A3pin');
 			categoryCommand('put', '/pin', 'pin', onCommandComplete);
 			return false;
 		});
@@ -58,7 +57,6 @@ define('forum/category/tools', [
 		});
 
 		components.get('topic/resolve').on('click', function () {
-			console.log('3mark-resolve');
 			categoryCommand('put', '/resolve', 'resolve', onCommandComplete);
 			return false;
 		});
@@ -178,7 +176,6 @@ define('forum/category/tools', [
 				break;
 
 			case 'resolve':
-				console.log('2resolve');
 				threadTools.requestResolveExpiry(body, execute.bind(null, true));
 				break;
 
@@ -291,19 +288,14 @@ define('forum/category/tools', [
 	}
 
 	function setPinnedState(data) {
-		console.log('A4setPinnedState');
 		const topic = getTopicEl(data.tid);
 		topic.toggleClass('pinned', data.isPinned);
 		topic.find('[component="topic/pinned"]').toggleClass('hidden', !data.isPinned);
-		// topic.toggleClass('pinned', data.isPinned);
-		// topic.find('[component="topic/resolved"]').toggleClass('hidden', !data.isPinned);
 		ajaxify.refresh();
 	}
 
 	function setResolvedState(data) {
-		console.log('A4setPinnedState');
 		const topic = getTopicEl(data.tid);
-		// topic.toggleClass('pinned', data.isPinned);
 		topic.toggleClass('resolved', data.isResolved);
 		topic.find('[component="topic/resolved"]').toggleClass('hidden', !data.isResolved);
 		ajaxify.refresh();
