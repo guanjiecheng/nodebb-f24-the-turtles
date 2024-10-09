@@ -247,7 +247,7 @@ describe('Topic\'s', () => {
 				if (err) {
 					return done(err);
 				}
-				assert(result)
+				assert(result);
 				assert.equal(result.topicData.isPrivate, 'false', 'isPrivate should be false by default');
 				done();
 			});
@@ -259,12 +259,12 @@ describe('Topic\'s', () => {
 				title: topic.title,
 				content: topic.content,
 				cid: topic.categoryId,
-				privatePost: true
+				privatePost: true,
 			}, (err, result) => {
 				if (err) {
 					return done(err);
 				}
-				assert(result)
+				assert(result);
 				assert.equal(result.topicData.isPrivate, 'true', 'isPrivate should be true');
 				done();
 			});
@@ -277,12 +277,12 @@ describe('Topic\'s', () => {
 				content: topic.content,
 				cid: topic.categoryId,
 				privatePost: true,
-			})
+			});
 			assert.equal(results.topicData.isPrivate, 'true', 'isPrivate should be true');
-						
+
 			const tids = await categories.getAllTopicIds(topic.categoryId, 0, 10);
 			const allowed = await privileges.topics.filterTids('topics:read', tids, fooUid);
-			const valid = allowed.includes(results.topicData.tid)
+			const valid = allowed.includes(results.topicData.tid);
 			assert.equal(valid, false, 'should not be able to read this topic');
 		});
 
@@ -293,12 +293,12 @@ describe('Topic\'s', () => {
 				content: topic.content,
 				cid: topic.categoryId,
 				privatePost: true,
-			})
+			});
 			assert.equal(results.topicData.isPrivate, 'true', 'isPrivate should be true');
-						
+
 			const tids = await categories.getAllTopicIds(topic.categoryId, 0, 10);
 			const allowed = await privileges.topics.filterTids('topics:read', tids, topic.userId);
-			const valid = allowed.includes(results.topicData.tid)
+			const valid = allowed.includes(results.topicData.tid);
 			assert.equal(valid, true, 'should be able to read this topic');
 		});
 	});
@@ -1136,7 +1136,6 @@ describe('Topic\'s', () => {
 
 		it('should load topic api data', async () => {
 			const { response, body } = await request.get(`${nconf.get('url')}/api/topic/${topicData.slug}`);
-			console.log("RESPONSE", response, body, "\n")
 			assert.equal(response.statusCode, 200);
 			assert.strictEqual(body._header.tags.meta.find(t => t.name === 'description').content, 'topic content');
 			assert.strictEqual(body._header.tags.meta.find(t => t.property === 'og:description').content, 'topic content');
