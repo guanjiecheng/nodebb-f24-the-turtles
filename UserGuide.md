@@ -1,6 +1,8 @@
 # How to Use the New Features
 
-## User Story 1:
+#BELOW IS A TEMPLATE PLS DELETE BEFORE SUBMISSION.
+
+## User Story #:
 
 ### 1. Feature Overview
 - **Feature Name**: [Name of the feature]
@@ -27,7 +29,7 @@
 
 ---
 
-## User Story 2: As a student, I want to be able to create topics anonymously, so that I feel comfortable asking questions without judgment.
+## User Story 1: As a student, I want to be able to create topics anonymously, so that I feel comfortable asking questions without judgment.
 
 ### 1. Feature Overview
 - **Feature Name**: Anonymous Checkbox for Topic Creation
@@ -63,7 +65,7 @@ The tests provide comprehensive coverage of the anonymous posting feature, focus
 
 ---
 
-## User Story 9: 
+## User Story 2: 
 
 ### 1. Feature Overview
 - **Feature Name**: 'Mark As Resolved' button in dropdown menu
@@ -100,6 +102,59 @@ I believe the tests are sufficient for covering the changes because they address
 - The first test checks that when a topic is initially created, the "resolved" field is undefined. This ensures that no unintended default values are assigned to the field during topic creation, which aligns with the expected functionality.
 - The second test verifies that the system correctly allows marking a topic as resolved by setting the "resolved" field to 1. It ensures that the update mechanism works as intended and that the field can be retrieved with the correct value after the change is made.
 - The tests in line 910-932 cover both the creation of a new topic and updating its "resolved" status. They validate the core functionality of marking topics as resolved and ensure the changes work end-to-end. The state is checked after the update, confirming correct behavior.
+
+---
+
+## User Story 3:
+
+### 1. Feature Overview
+- **Feature Name**: Privacy Toggle for Topic Creation
+- **Purpose**: This feature allows students to privately communicate sensitive or personal information to their instructors without exposing it to their peers or the public. It also enhances the purpose of the Q&A forum as it allows students to ask more personalized questions (eg, questions involving code for example, or performance in the course), without it being shown to other students. Without this feature, students would be limited in scope to what kind of questions they can ask and what details they can provide in their posts.
+- **Coder**: Guanjie Cheng
+
+### 2. Steps to Use the Feature
+1. **Step 1**: Register Two New Users, User A and  User B (these are regular users, not admins)
+2. **Step 2**: Login as  User A.
+3. **Step 3**: Go to the Q&A category.
+4. **Step 4**: Click New Topic.
+5. **Step 5**: Fill in Topic title and Topic body
+6. **Step 6**: In the top right, next to "Post Anonymously" click the button that is currently an open lock and says "Public". This should toggle the button to be a closed lock icon and say "Private"
+   **Expected Result**:
+   ![Screenshot 2024-10-09 at 6 11 54 PM](https://github.com/user-attachments/assets/a42866e5-0e09-41d1-bf72-07792a6e6bfa)
+8. **Step 7**: Click Submit
+9. **Step 8**: Go back to Q&A section and see that the topic is successfully created by User A
+   **Expected Result**:
+   ![Screenshot 2024-10-09 at 6 13 15 PM](https://github.com/user-attachments/assets/19f97100-3e91-4959-bd44-d71f15358903)
+11. **Step 9**: Log out and Log in as User B
+12. **Step 10**: Go to the Q&A section and see that there are no topics created, as user B does not have administrative privileges thus unable to see User A's private topic
+    **Expected Result**:
+    ![Screenshot 2024-10-09 at 6 15 06 PM](https://github.com/user-attachments/assets/2034a618-3579-4d1c-b2ae-6f24365b6879)
+13. **Step 11**: Create a Public topic and a Private topic as User B and go back to the Q&A to see both topics.
+    **Expected Result**:
+    ![Screenshot 2024-10-09 at 6 20 42 PM](https://github.com/user-attachments/assets/112f636b-1614-4819-9387-bed478ba9643)
+14. **Step 12**: Log out and Log in as User A and go to the Q&A category. See how User A can only see its own Private topic and User B's public topic and not User B's private topic.
+    **Expected Result**:
+    ![Screenshot 2024-10-09 at 6 22 28 PM](https://github.com/user-attachments/assets/afde2e49-1669-4dc2-a668-d2f87eddd493)
+15. **Step 13**: Log out and log in as an Administrator and go to the Q&A category. See how the administrator can see all topics created. 
+    **Expected Result**:
+    ![Screenshot 2024-10-09 at 6 23 36 PM](https://github.com/user-attachments/assets/b546ac41-9d31-4898-8101-d923c15fa730)
+
+
+### Automated Tests
+
+### 1. Location of Automated Tests
+- **Location**: The tests can [be found in test/topics.js here](https://github.com/CMU-313/nodebb-f24-the-turtles/blob/838f17a0a9009a5c6f7147dcf44132451641263e/test/topics.js#L269-L332)
+
+### 2. What is Being Tested
+- **Tested Features**:
+  - Information on if a topic was created as public is accurately reflected in the backend
+  - Information on if a topic was created as private is accurately reflected in the backend
+  - Filtering of topics based on user privileges.
+- **Test Type**: Unit tests. 
+
+### 3. Why the Tests Are Sufficient
+- **Coverage Justification**: These tests are ultimately sufficient because they comprehensively cover the core functionality of privacy labeling in topic creation, and privilege-based filtering, which are the features that I included. First, by testing both the default public behavior and the explicit marking of topics as private, I ensure that the system correctly handles all possible paths for topic creation. Also, by validating that the correct privacy information is included in the database, it guarantees that subsequent operations based on this data, such as filtering, will have the correct information passed to them for further operations. The filtering test, which differentiates between admin and non-admin users, ensures that only authorized users can view private topics, verifying that the privilege-based access control works as intended. 
+
 
 # Author(s)
 - **Names**: Shanting Hou, Sofia Reyes Franco, Guanjie Cheng, Amanda Lu
