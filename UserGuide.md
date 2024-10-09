@@ -144,6 +144,7 @@ I believe the tests are sufficient for covering the changes because they address
 
 ### 1. Location of Automated Tests
 - **Location**: The tests can [be found in test/topics.js here](https://github.com/CMU-313/nodebb-f24-the-turtles/blob/838f17a0a9009a5c6f7147dcf44132451641263e/test/topics.js#L269-L332)
+- **Note**: The addition of the additional field in the database causes the csrf token to be invalidated when running other tests regarding topic posting. It is unclear why adding a field invalidates such a token as the additional field has also been added to documents that specify the structure of body objects being passed around.
 
 ### 2. What is Being Tested
 - **Tested Features**:
