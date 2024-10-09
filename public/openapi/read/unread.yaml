@@ -37,6 +37,9 @@ get:
                               nullable: true
                             titleRaw:
                               type: string
+                            isPrivate:
+                              type: string
+                              nullable: true
                             category:
                               type: object
                               properties:

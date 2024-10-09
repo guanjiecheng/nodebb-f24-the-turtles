@@ -180,6 +180,8 @@ TopicObject:
           description: A topic identifier
         isAnonymous: 
           type: string
+        isPrivate:
+          type: string
         thumb:
           type: string
         pinExpiry:

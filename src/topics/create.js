@@ -35,11 +35,12 @@ module.exports = function (Topics) {
 			viewcount: 0,
 			isAnonymous: data.postAnonymous ? data.postAnonymous : false,
 		};
-
+		
 		if (Array.isArray(data.tags) && data.tags.length) {
 			topicData.tags = data.tags.join(',');
 		}
-
+		
+		topicData.isPrivate = (data.privatePost === undefined || data.privatePost === false) ? false : true
 		const result = await plugins.hooks.fire('filter:topic.create', { topic: topicData, data: data });
 		topicData = result.topic;
 		await db.setObject(`topic:${topicData.tid}`, topicData);
@@ -140,6 +141,7 @@ module.exports = function (Topics) {
 		postData.ip = data.req ? data.req.ip : null;
 		postData.isMain = true;
 		postData.isAnonymous = data.postAnonymous ? data.postAnonymous : false;
+		postData.isPrivate = data.privatePost;
 		postData = await posts.create(postData);
 		postData = await onNewPost(postData, data);
 

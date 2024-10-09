@@ -265,6 +265,55 @@ describe('Topic\'s', () => {
 			assert.strictEqual(replyResult.body.response.user.displayname, 'guest124');
 			meta.config.allowGuestHandles = oldValue;
 		});
+
+		it('default post as public', (done) => {
+			topics.post({
+				uid: topic.userId,
+				title: topic.title,
+				content: topic.content,
+				cid: topic.categoryId,
+			}, (err, result) => {
+				if (err) {
+					return done(err);
+				}
+				assert(result)
+				assert.equal(result.topicData.isPrivate, 'false', 'isPrivate should be false by default');
+				done();
+			});
+		});
+
+		it('be able to post as private', (done) => {
+			topics.post({
+				uid: topic.userId,
+				title: topic.title,
+				content: topic.content,
+				cid: topic.categoryId,
+				privatePost: true
+			}, (err, result) => {
+				if (err) {
+					return done(err);
+				}
+				assert(result)
+				assert.equal(result.topicData.isPrivate, 'true', 'isPrivate should be true');
+				done();
+			});
+		});
+
+		it('Guest users should not be able to see private posts', async () => {
+			const results = await topics.post({
+				uid: topic.userId,
+				title: topic.title,
+				content: topic.content,
+				cid: topic.categoryId,
+				privatePost: true,
+			})
+			assert.equal(results.topicData.isPrivate, 'true', 'isPrivate should be true');
+						
+			const tids = await categories.getAllTopicIds(topic.categoryId, 0, 10);
+			const allowed = await privileges.topics.filterTids('topics:read', tids, fooUid);
+			const valid = allowed.includes(results.topicData.tid)
+			assert.equal(valid, false, 'should not be able to read this topic');
+		});
 	});
 
 	describe('.reply', () => {
@@ -1083,6 +1132,7 @@ describe('Topic\'s', () => {
 				content: 'topic content',
 				cid: topic.categoryId,
 				thumb: 'http://i.imgur.com/64iBdBD.jpg',
+				privatePost: true,
 			}, (err, result) => {
 				assert.ifError(err);
 				assert.ok(result);
@@ -1099,6 +1149,7 @@ describe('Topic\'s', () => {
 
 		it('should load topic api data', async () => {
 			const { response, body } = await request.get(`${nconf.get('url')}/api/topic/${topicData.slug}`);
+			console.log("RESPONSE", response, body, "\n")
 			assert.equal(response.statusCode, 200);
 			assert.strictEqual(body._header.tags.meta.find(t => t.name === 'description').content, 'topic content');
 			assert.strictEqual(body._header.tags.meta.find(t => t.property === 'og:description').content, 'topic content');

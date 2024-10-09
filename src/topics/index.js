@@ -53,6 +53,7 @@ Topics.getTopics = async function (tids, options) {
 	if (typeof options === 'object') {
 		uid = options.uid;
 	}
+	console.log(options);
 
 	tids = await privileges.topics.filterTids('topics:read', tids, uid);
 	return await Topics.getTopicsByTids(tids, options);

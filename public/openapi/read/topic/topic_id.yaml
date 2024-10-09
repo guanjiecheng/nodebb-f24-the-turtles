@@ -437,6 +437,9 @@ get:
                   isAnonymous:
                     type: string
                     nullable: true
+                  isPrivate:
+                    type: string
+                    nullable: true
                   tid:
                     type: number
                     description: A topic identifier

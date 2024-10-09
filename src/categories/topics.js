@@ -23,7 +23,9 @@ module.exports = function (Categories) {
 		topics.calculateTopicIndices(topicsData, data.start);
 
 		results = await plugins.hooks.fire('filter:category.topics.get', { cid: data.cid, topics: topicsData, uid: data.uid });
-		return { topics: results.topics, nextStart: data.stop + 1 };
+		const allowedToView = await privileges.topics.filterTids('topics:read', tids, data.uid);
+		const allowedTopics = results.topics.filter(x => allowedToView.includes(x.tid));
+		return { topics: allowedTopics, nextStart: data.stop + 1 };
 	};
 
 	Categories.getTopicIds = async function (data) {
@@ -85,7 +87,9 @@ module.exports = function (Categories) {
 		} else if (data.targetUid && set) {
 			return await db.sortedSetCard(set);
 		}
-		return data.category.topic_count;
+		const topics = await Categories.getAllTopicIds(data.category.cid, 0, data.category.topic_count)
+		const allowedToView = await privileges.topics.filterTids('topics:read', topics, data.uid);
+		return allowedToView.length;
 	};
 
 	Categories.buildTopicsSortedSet = async function (data) {
@@ -152,8 +156,8 @@ module.exports = function (Categories) {
 		return await topics.tools.checkPinExpiry(pinnedTids);
 	};
 
-	Categories.modifyTopicsByPrivilege = function (topics, privileges) {
-		if (!Array.isArray(topics) || !topics.length || privileges.view_deleted) {
+	Categories.modifyTopicsByPrivilege = async function (topics, p) {
+		if (!Array.isArray(topics) || !topics.length || p.view_deleted) {
 			return;
 		}
 
