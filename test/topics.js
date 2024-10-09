@@ -285,6 +285,22 @@ describe('Topic\'s', () => {
 			const valid = allowed.includes(results.topicData.tid)
 			assert.equal(valid, false, 'should not be able to read this topic');
 		});
+
+		it('Admin users should not be able to see private posts', async () => {
+			const results = await topics.post({
+				uid: topic.userId,
+				title: topic.title,
+				content: topic.content,
+				cid: topic.categoryId,
+				privatePost: true,
+			})
+			assert.equal(results.topicData.isPrivate, 'true', 'isPrivate should be true');
+						
+			const tids = await categories.getAllTopicIds(topic.categoryId, 0, 10);
+			const allowed = await privileges.topics.filterTids('topics:read', tids, topic.userId);
+			const valid = allowed.includes(results.topicData.tid)
+			assert.equal(valid, true, 'should be able to read this topic');
+		});
 	});
 
 	describe('.reply', () => {
