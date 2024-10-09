@@ -187,9 +187,6 @@ get:
                         isAnonymous:
                           type: string
                           nullable: true
-                        privatePost:
-                          type: string
-                          nullable: false 
                         replies:
                           type: object
                           properties:
@@ -440,9 +437,9 @@ get:
                   isAnonymous:
                     type: string
                     nullable: true
-                  privatePost:
+                  isPrivate:
                     type: string
-                    nullable: false
+                    nullable: true
                   tid:
                     type: number
                     description: A topic identifier

@@ -38,8 +38,6 @@ get:
                     type: number
                   isAnonymous:
                     type: string
-                  privatePost:
-                    type: string
                   flagId:
                     type: number
                   deleted:
