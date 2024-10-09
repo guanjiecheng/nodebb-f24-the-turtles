@@ -65,7 +65,7 @@ The tests provide comprehensive coverage of the anonymous posting feature, focus
 
 ---
 
-## User Story 2: 
+## User Story 2: As a instructor I want to mark a student’s question as resolved, so it’s clear to other students that the issue has been addressed.
 
 ### 1. Feature Overview
 - **Feature Name**: 'Mark As Resolved' button in dropdown menu
@@ -87,7 +87,7 @@ The tests provide comprehensive coverage of the anonymous posting feature, focus
 ### Automated Tests
 
 ### 1. Location of Automated Tests
-- **Location**: File: test/topics.js, Lines: 241-276, 910-932
+- **Location**: File: `test/topics.js`, Lines: 241-276, 910-932. 
 
 ### 2. What is Being Tested
 - **Tested Features**:
