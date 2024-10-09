@@ -93,6 +93,8 @@ TopicObject:
           properties:
             isAnonymous:
               type: string
+            privatePost:
+              type: string
             pid:
               type: number
             uid:
@@ -179,6 +181,8 @@ TopicObject:
           type: number
           description: A topic identifier
         isAnonymous: 
+          type: string
+        privatePost:
           type: string
         thumb:
           type: string
@@ -287,6 +291,8 @@ TopicObjectSlim:
           type: number
           description: The number of thumbnails associated with this topic
         isAnonymous:
+          type: string
+        privatePost:
           type: string
       required:
         - tid

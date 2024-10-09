@@ -247,7 +247,8 @@ describe('Topic\'s', () => {
 				if (err) {
 					return done(err);
 				}
-				assert.strictEqual(result.topicData.isPrivate, 'false', 'isPrivate should be false by default');
+				assert(result)
+				assert.equal(result.topicData.isPrivate, 'false', 'isPrivate should be false by default');
 				done();
 			});
 		});
@@ -258,45 +259,31 @@ describe('Topic\'s', () => {
 				title: topic.title,
 				content: topic.content,
 				cid: topic.categoryId,
-				isPrivate: true,
+				privatePost: true
 			}, (err, result) => {
 				if (err) {
 					return done(err);
 				}
-				assert.strictEqual(result.topicData.isPrivate, 'true', 'isPrivate should be true');
+				assert(result)
+				assert.equal(result.topicData.isPrivate, 'true', 'isPrivate should be true');
 				done();
 			});
 		});
 
-		it('Guest users should not be able to see private posts', (done) => {
-			topics.post({
+		it('Guest users should not be able to see private posts', async () => {
+			const results = await topics.post({
 				uid: topic.userId,
 				title: topic.title,
 				content: topic.content,
 				cid: topic.categoryId,
-				isPrivate: true,
-			}, (err, result) => {
-				if (err) {
-					return done(err);
-				}
-				assert.strictEqual(result.topicData.isPrivate, 'true', 'isPrivate should be true');
-				categories.getCategoryTopics({
-					cid: topic.categoryId,
-					start: 0,
-					stop: 10,
-					uid: 0,
-					sort: 'oldest_to_newest',
-				}, (err, res) => {
-					assert.equal(err, null);
-					assert(Array.isArray(res.topics));
-
-					const tids = res.topics.map(x => x.tid);
-					const allowed = privileges.topics.filterTids('topics:read', tids, fooUid);
-					assert(allowed.includes(result.topicData.tid), false, 'should not be able to read this topic');
-
-					done();
-				});
-			});
+				privatePost: true,
+			})
+			assert.equal(results.topicData.isPrivate, 'true', 'isPrivate should be true');
+						
+			const tids = await categories.getAllTopicIds(topic.categoryId, 0, 10);
+			const allowed = await privileges.topics.filterTids('topics:read', tids, fooUid);
+			const valid = allowed.includes(results.topicData.tid)
+			assert.equal(valid, false, 'should not be able to read this topic');
 		});
 	});
 
