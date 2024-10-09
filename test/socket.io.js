@@ -3,7 +3,10 @@
 // see https://gist.github.com/jfromaniello/4087861#gistcomment-1447029
 
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+if (process.env.NODE_ENV === 'development') {
+	process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // Only for local development
+}
 
 const util = require('util');
 

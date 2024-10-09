@@ -57,6 +57,7 @@ topicsAPI.create = async function (caller, data) {
 
 	const payload = { ...data };
 	payload.tags = payload.tags || [];
+	// payload.resolve = 0;
 	apiHelpers.setDefaultPostData(caller, payload);
 	const isScheduling = parseInt(data.timestamp, 10) > payload.timestamp;
 	if (isScheduling) {
@@ -149,6 +150,14 @@ topicsAPI.unpin = async function (caller, data) {
 	});
 };
 
+topicsAPI.resolve = async function (caller, { tids, expiry }) {
+	await doTopicAction('resolve', 'event:topic_resolved', caller, { tids });
+
+	if (expiry) {
+		await Promise.all(tids.map(async tid => topics.tools.setPinExpiry(tid, expiry, caller.uid)));
+	}
+};
+
 topicsAPI.lock = async function (caller, data) {
 	await doTopicAction('lock', 'event:topic_locked', caller, {
 		tids: data.tids,
@@ -160,6 +169,20 @@ topicsAPI.unlock = async function (caller, data) {
 		tids: data.tids,
 	});
 };
+
+// topics.resolve = async function (req, { tids }) {
+//     await Promise.all(tids.map(async (tid) => {
+//         await topics.setTopicField(tid, 'resolved', 1);  // Set resolved to 1
+//         await events.log({ type: 'topic_resolved', uid: req.uid, tid });
+//     }));
+// };
+
+// topics.unresolve = async function (req, { tids }) {
+//     await Promise.all(tids.map(async (tid) => {
+//         await topics.setTopicField(tid, 'resolved', 0);  // Set resolved to 0
+//         await events.log({ type: 'topic_unresolved', uid: req.uid, tid });
+//     }));
+// };
 
 topicsAPI.follow = async function (caller, data) {
 	await topics.follow(data.tid, caller.uid);

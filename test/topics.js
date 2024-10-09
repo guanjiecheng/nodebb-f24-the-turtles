@@ -316,6 +316,118 @@ describe('Topic\'s', () => {
 		});
 	});
 
+	it('default topic as unresolved', (done) => {
+		topics.post(
+			{ uid: topic.userId, title: topic.title, content: topic.content, cid: topic.categoryId },
+			(err, result) => {
+				if (err) {
+					return done(err);
+				}
+				assert.strictEqual(result.topicData.resolved, undefined, 'resolved should be undefined by default');
+				done();
+			}
+		);
+	});
+
+	it('should be able to mark topic as resolved', (done) => {
+		topics.post(
+			{ uid: topic.userId, title: topic.title, content: topic.content, cid: topic.categoryId },
+			(err, result) => {
+				if (err) {
+					return done(err);
+				}
+				topics.setTopicField(result.topicData.tid, 'resolved', '1', (err) => {
+					if (err) {
+						return done(err);
+					}
+					topics.getTopicField(result.topicData.tid, 'resolved', (err, resolved) => {
+						if (err) {
+							return done(err);
+						}
+						assert.strictEqual(resolved, '1', 'resolved should be true');
+						done();
+					});
+				});
+			}
+		);
+	});
+
+	describe('Topics', () => {
+		// Test for creating a new topic
+		describe('.post', () => {
+			it('should create a new topic with valid parameters', (done) => {
+				topics.post({
+					uid: topic.userId,
+					title: 'Test Topic',
+					content: 'This is a test topic content',
+					cid: topic.categoryId,
+				}, (err, result) => {
+					assert.equal(err, null, 'topic created with error');
+					assert.ok(result);
+					assert.ok(result.topicData);
+					assert.ok(result.postData);
+					assert.equal(result.topicData.title, 'Test Topic', 'title should match');
+					done();
+				});
+			});
+
+			it('should return an error for invalid category', (done) => {
+				topics.post({
+					uid: topic.userId,
+					title: 'Test Topic',
+					content: 'This is a test topic content',
+					cid: 'invalid-category-id', // Invalid category ID
+				}, (err, result) => {
+					assert.ok(err, 'expected an error for invalid category');
+					done();
+				});
+			});
+		});
+
+		// Now follow with the reply tests
+		describe('.reply', () => {
+			let newTopic;
+			let newPost;
+
+			before((done) => {
+				topics.post({
+					uid: topic.userId,
+					title: topic.title,
+					content: topic.content,
+					cid: topic.categoryId,
+				}, (err, result) => {
+					if (err) {
+						return done(err);
+					}
+
+					newTopic = result.topicData;
+					newPost = result.postData;
+					done();
+				});
+			});
+
+			it('should create a new reply with proper parameters', (done) => {
+				topics.reply({ uid: topic.userId, content: 'test post', tid: newTopic.tid }, (err, result) => {
+					assert.equal(err, null, 'was created with error');
+					assert.ok(result);
+
+					done();
+				});
+			});
+
+			it('should handle direct replies', async () => {
+				const result = await topics.reply({ uid: topic.userId, content: 'test reply', tid: newTopic.tid, toPid: newPost.pid });
+				assert.ok(result);
+
+				const postData = await apiPosts.getReplies({ uid: 0 }, { pid: newPost.pid });
+				assert.ok(postData);
+
+				assert.equal(postData.length, 1, 'should have 1 result');
+				assert.equal(postData[0].pid, result.pid, 'result should be the reply we added');
+			});
+		});
+	});
+
 	describe('.reply', () => {
 		let newTopic;
 		let newPost;
@@ -905,6 +1017,29 @@ describe('Topic\'s', () => {
 				return assert.strictEqual(err.message, '[[error:no-privileges]]');
 			}
 			assert(false);
+		});
+	});
+
+	describe('tools/resolve', () => {
+		let newTopic;
+		let newPost;
+		let newReply;
+		let newReply2;
+		it('should create a new topic', async () => {
+			const result = await topics.post({
+				uid: topic.userId,
+				title: topic.title,
+				content: topic.content,
+				cid: topic.categoryId,
+			});
+			newTopic = result.topicData;
+			newPost = result.postData;
+		});
+
+		it('should mark a topic as resolved', async () => {
+			await apiTopics.resolve({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
+			const resolved = await topics.getTopicField(newTopic.tid, 'resolved');
+			assert.strictEqual(resolved, '1');
 		});
 	});
 

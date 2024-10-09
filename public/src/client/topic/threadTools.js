@@ -61,8 +61,12 @@ define('forum/topic/threadTools', [
 			return false;
 		});
 
+		topicContainer.on('click', '[component="topic/mark-resolve"]', function () {
+			topicCommand('put', '/resolve', 'resolve');
+			return false;
+		});
+
 		topicContainer.on('click', '[component="topic/mark-unread"]', function () {
-			console.log('mark-unreadAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 			topicCommand('del', '/read', undefined, () => {
 				if (app.previousUrl && !app.previousUrl.match('^/topic')) {
 					ajaxify.go(app.previousUrl, function () {
@@ -248,6 +252,10 @@ define('forum/topic/threadTools', [
 				ThreadTools.requestPinExpiry(body, execute.bind(null, true));
 				break;
 
+			case 'resolve':
+				ThreadTools.requestResolveExpiry(body, execute.bind(null, true));
+				break;
+
 			default:
 				execute(true);
 				break;
@@ -286,6 +294,39 @@ define('forum/topic/threadTools', [
 							} else {
 								alerts.error('[[error:invalid-date]]');
 							}
+						},
+					},
+				},
+			});
+		});
+	};
+
+	ThreadTools.requestResolveExpiry = function (body, onSuccess) {
+		// Modify to set expiry as 'forever' (no expiry)
+		app.parseAndTranslate('modals/set-pin-expiry', {}, function (html) {
+			const modal = bootbox.dialog({
+				title: '[[topic:thread-tools.resolve]]',
+				message: html,
+				onEscape: true,
+				onShown: function () {
+					// Leave the expiry date and time empty to default to 'forever'
+					const expiryDateEl = modal.get(0).querySelector('#expiry-date');
+					const expiryTimeEl = modal.get(0).querySelector('#expiry-time');
+					if (expiryDateEl) expiryDateEl.value = ''; // No expiry date
+					if (expiryTimeEl) expiryTimeEl.value = ''; // No expiry time
+				},
+				buttons: {
+					cancel: {
+						label: '[[modules:bootbox.cancel]]',
+						className: 'btn-link',
+					},
+					save: {
+						label: 'Yes, Mark As Resolved',
+						className: 'btn-primary',
+						callback: function () {
+							// Automatically set expiry to 'forever' by skipping any expiry date/time
+							body.expiry = null; // No expiry, set as forever
+							onSuccess(); // Proceed with resolving without expiry
 						},
 					},
 				},
@@ -373,6 +414,18 @@ define('forum/topic/threadTools', [
 			));
 		}
 		ajaxify.data.pinned = data.pinned;
+
+		posts.addTopicEvents(data.events);
+	};
+
+	ThreadTools.setResolvedState = function (data) {
+		const threadEl = components.get('topic');
+		if (parseInt(data.tid, 10) !== parseInt(threadEl.attr('data-tid'), 10)) {
+			return;
+		}
+
+		components.get('topic/resolve').toggleClass('hidden', data.resolved).parent().attr('hidden', data.resolved ? '' : null);
+		ajaxify.data.resolved = data.resolved;
 
 		posts.addTopicEvents(data.events);
 	};
