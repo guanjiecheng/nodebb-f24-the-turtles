@@ -156,6 +156,32 @@ I believe the tests are sufficient for covering the changes because they address
 ### 3. Why the Tests Are Sufficient
 - **Coverage Justification**: These tests are ultimately sufficient because they comprehensively cover the core functionality of privacy labeling in topic creation, and privilege-based filtering, which are the features that I included. First, by testing both the default public behavior and the explicit marking of topics as private, I ensure that the system correctly handles all possible paths for topic creation. Also, by validating that the correct privacy information is included in the database, it guarantees that subsequent operations based on this data, such as filtering, will have the correct information passed to them for further operations. The filtering test, which differentiates between admin and non-admin users, ensures that only authorized users can view private topics, verifying that the privilege-based access control works as intended. 
 
+## User Story #: As an instructor, I want to pin important posts at the top of the Q&A section so that students can easily see relevant announcements or information.
+
+### 1. Feature Overview
+- **Feature Name**: Pin Button
+- **Purpose**: The pin feature allows instructors to highlight critical information, such as announcements or key instructions, by pinning important posts to the top of the Q&A section. This ensures that these posts remain visible and do not get lost amidst regular discussions, enhancing the organization and overall learning experience for students.
+- **Coder**: Sofia Reyes Franco
+
+### 2. Steps to Use the Feature
+1. **Step 1**: Navigate to the categories page and click on Q&A.
+2. **Step 2**: In the Q&A section, select the post or topic you want to pin.
+3. **Step 3**: Click on Topic Tools at the top of the page or within the post.
+4. **Expected Result**: Choose Pin Topic from the list of options to pin the post.
+
+### Automated Tests
+
+### 1. Location of Automated Tests
+- **Location**: File: tests/topic.js Lines: 691-702
+
+### 2. What is Being Tested
+- **Tested Features**: These tests verify that the server correctly updates the topic object when an instructor pins a post, ensuring that the pin functionality works as intended and that the posts are appropriately sorted on the front end.
+
+### 3. Why the Tests Are Sufficient
+- **Coverage Justification**: The automated tests cover user interaction with the pin button, ensuring that the pinning and unpinning functionality operates seamlessly. The tests also validate the correct sorting of pinned posts at the top of the page and handle edge cases where multiple posts are pinned or unpinned.
+
+---
+
 
 # Author(s)
 - **Names**: Shanting Hou, Sofia Reyes Franco, Guanjie Cheng, Amanda Lu
