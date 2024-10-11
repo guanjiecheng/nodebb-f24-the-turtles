@@ -24,7 +24,7 @@
 ### Automated Tests
 
 ### 1. Location of Automated Tests
-**Location**: Test/topics.js, lines 80-107
+**Location**: Test/topics.js, lines [80-107](https://github.com/CMU-313/nodebb-f24-the-turtles/blob/f24/test/topics.js#L80-L107)
 
 ### 2. What is Being Tested
 - **Tested Features**: The functionality of the "Post Anonymously" checkbox and the behavior of the isAnonymous field in topic creation.
@@ -44,21 +44,22 @@ The tests provide comprehensive coverage of the anonymous posting feature, focus
 - **Coder**: Amanda Lu
 
 ### 2. Steps to Use the Feature
-1. **Step 1**: Navigate to the forum topic you want to mark as resolved.
-2. **Step 2**: Click on the dropdown menu to reveal additional options.
+1. **Step 0**: Since this change requires connection with the front-end repo, user need to download our front end repo to the same file path, and then change the `install/package.json` file. Look up `nodebb-theme-harmony` and change this line to: `"nodebb-theme-harmony": "file:../nodebb-frontend-f24-the-turtles",` then do `npm install`, and `./nodebb build tpl`.
+2. **Step 1**: Navigate to the forum topic you want to mark as resolved.
+3. **Step 2**: Click on the dropdown menu to reveal additional options.
 <img width="235" alt="Screen Shot 2024-10-03 at 17 09 02" src="https://github.com/user-attachments/assets/ab2fb858-0b88-4bd2-859b-f3ae271c0d27">
 
-3. **Step 3**: Click on the "Mark As Resolved" button from the dropdown menu.
-4. **Step 4**: Then a card displaying resolve confirmation will appear, user should click on "Yes, Mark As Resolved" button.
+4. **Step 3**: Click on the "Mark As Resolved" button from the dropdown menu. **After click, please manually click the REFRESH button to see the changes.**
+5. **Step 4**: Then a card displaying resolve confirmation will appear, user should click on "Yes, Mark As Resolved" button.
 <img width="315" alt="Screen Shot 2024-10-03 at 17 14 52" src="https://github.com/user-attachments/assets/be5c8438-8a87-4e63-9677-035bd67f9704">
 
-5. **Expected Result**: The topic will be marked as resolved, and a "Resolved" badge will appear next to the topic title, indicating its status. Additionally, the status will be updated in the backend, and the change will be reflected in the forum interface.
+6. **Expected Result**: The topic will be marked as resolved, and a "Resolved" badge will appear next to the topic title, indicating its status. Additionally, the status will be updated in the backend, and the change will be reflected in the forum interface.
 <img width="758" alt="Screen Shot 2024-10-03 at 17 13 24" src="https://github.com/user-attachments/assets/0948218e-d4e4-478a-9b9f-29462c718907">
 
 ### Automated Tests
 
 ### 1. Location of Automated Tests
-- **Location**: File: `test/topics.js`, Lines: 241-276, 910-932. 
+- **Location**: File: `test/topics.js`, Lines: [335-369](https://github.com/CMU-313/nodebb-f24-the-turtles/blob/f24/test/topics.js#L335-L369), [1039-1060](https://github.com/CMU-313/nodebb-f24-the-turtles/blob/f24/test/topics.js#L1039-L1060). 
 
 ### 2. What is Being Tested
 - **Tested Features**:
@@ -70,9 +71,9 @@ The tests provide comprehensive coverage of the anonymous posting feature, focus
 ### 3. Why the Tests Are Sufficient
 - **Coverage Justification**:
 I believe the tests are sufficient for covering the changes because they address the key behaviors related to the "resolved" field:
-- The first test checks that when a topic is initially created, the "resolved" field is undefined. This ensures that no unintended default values are assigned to the field during topic creation, which aligns with the expected functionality.
-- The second test verifies that the system correctly allows marking a topic as resolved by setting the "resolved" field to 1. It ensures that the update mechanism works as intended and that the field can be retrieved with the correct value after the change is made.
-- The tests in line 910-932 cover both the creation of a new topic and updating its "resolved" status. They validate the core functionality of marking topics as resolved and ensure the changes work end-to-end. The state is checked after the update, confirming correct behavior.
+   - The [first test](https://github.com/CMU-313/nodebb-f24-the-turtles/blob/f24/test/topics.js#L335-L369) checks that when a topic is initially created, the "resolved" field is undefined. This ensures that no unintended default values are assigned to the field during topic creation, which aligns with the expected functionality.
+   - The [second test](https://github.com/CMU-313/nodebb-f24-the-turtles/blob/f24/test/topics.js#L335-L369) verifies that the system correctly allows marking a topic as resolved by setting the "resolved" field to 1. It ensures that the update mechanism works as intended and that the field can be retrieved with the correct value after the change is made.
+   - The tests in line [1039-1060](https://github.com/CMU-313/nodebb-f24-the-turtles/blob/f24/test/topics.js#L1039-L1060) cover both the creation of a new topic and updating its "resolved" status. They validate the core functionality of marking topics as resolved and ensure the changes work end-to-end. The state is checked after the update, confirming correct behavior.
 
 ---
 
@@ -127,7 +128,7 @@ I believe the tests are sufficient for covering the changes because they address
 ### 3. Why the Tests Are Sufficient
 - **Coverage Justification**: These tests are ultimately sufficient because they comprehensively cover the core functionality of privacy labeling in topic creation, and privilege-based filtering, which are the features that I included. First, by testing both the default public behavior and the explicit marking of topics as private, I ensure that the system correctly handles all possible paths for topic creation. Also, by validating that the correct privacy information is included in the database, it guarantees that subsequent operations based on this data, such as filtering, will have the correct information passed to them for further operations. The filtering test, which differentiates between admin and non-admin users, ensures that only authorized users can view private topics, verifying that the privilege-based access control works as intended. 
 
-## User Story #: As an instructor, I want to pin important posts at the top of the Q&A section so that students can easily see relevant announcements or information.
+## User Story 4: As an instructor, I want to pin important posts at the top of the Q&A section so that students can easily see relevant announcements or information.
 
 ### 1. Feature Overview
 - **Feature Name**: Pin Button
